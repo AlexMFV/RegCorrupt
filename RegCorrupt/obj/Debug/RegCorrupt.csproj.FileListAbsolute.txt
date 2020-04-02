@@ -1,0 +1,10 @@
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\bin\Debug\RegCorrupt.exe.config
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\bin\Debug\RegCorrupt.exe
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\bin\Debug\RegCorrupt.pdb
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.csprojAssemblyReference.cache
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.Properties.Resources.resources
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.csproj.GenerateResource.cache
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.csproj.CoreCompileInputs.cache
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.exe
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.pdb
+C:\Users\Alex~\Desktop\Repos\RegCorrupt\RegCorrupt\obj\Debug\RegCorrupt.Form1.resources
