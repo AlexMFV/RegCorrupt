@@ -27,25 +27,28 @@ namespace RegCorrupt
 
             foreach (string key in SubKeys)
             {
-                if(key != "SECURITY")
-                    lstRegistry.Items.Add(key);
+                if (key != "SECURITY")
+                {
+                    TreeNode parent = treeRegistry.Nodes.Add(key);
+                    LoadSubKeys(def_path.OpenSubKey(key), parent);
+                }
             }
         }
 
-        public void LoadSubKeys(RegistryKey path)
+        public void LoadSubKeys(RegistryKey path, TreeNode parent)
         {
-            lstRegistry.Items.Clear();
-
             foreach(string key in path.GetSubKeyNames())
             {
-                lstRegistry.Items.Add(key);
+                try
+                {
+                    TreeNode newParent = parent.Nodes.Add(key);
+                    LoadSubKeys(path.OpenSubKey(key), newParent);
+                }
+                catch (System.Security.SecurityException)
+                {
+                    break;
+                }
             }
-        }
-
-        private void lstRegistry_DoubleClick(object sender, EventArgs e)
-        {
-            if (lstRegistry.SelectedIndex != -1)
-                LoadSubKeys(def_path.OpenSubKey(lstRegistry.SelectedItem.ToString()));
         }
     }
 }
